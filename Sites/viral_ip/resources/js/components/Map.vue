@@ -26,12 +26,12 @@ export default {
 
                 for (var i = 0; i < points.rest.length; i++) {
                     L.marker([points.rest[i]['latitude'], points.rest[i]['longitude']], {
-                        icon: this.getIcon(false)
+                        icon: this.getIcon(false, points.rest[i]['id'])
                     }).bindPopup(points.rest[i]['city']).addTo(this.map);
                 }
 
                 L.marker([points.mine.latitude, points.mine.longitude], {
-                    icon: this.getIcon(true)
+                    icon: this.getIcon(true, points.mine.id)
                 }).bindPopup(points.mine.city).addTo(this.map);
             }).catch(error => (console.error(error)));
         },
@@ -43,16 +43,25 @@ export default {
             }).addTo(this.map);
         },
 
-        getIcon: function(own) {
-            let Icon = L.icon({
-                iconUrl: own ? "icons/marker-red.png" : "icons/marker-blue.png",
-                iconSize: [20, 20], // size of the icon
-                shadowSize:   [50, 64], // size of the shadow
-                iconAnchor: [10, 20], // point of the icon which will correspond to marker's location
-                shadowAnchor: [4, 62],  // the same for the shadow
-                popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
-            });
+        getIcon: function(own, id) {
 
+            const Icon = L.divIcon({
+                html: `
+            <svg
+              width="24"
+              height="40"
+              viewBox="0 0 100 100"
+              version="1.1"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M0 0 L50 100 L100 0 Z" fill="${own ? '#7A8BE7' : '#4fcd29'}"></path>
+              <text x="25" y="50" font-family="Verdana" font-size="45" fill="black">${id}</text>
+            </svg>`,
+                className: "",
+                iconSize: [24, 40],
+                iconAnchor: [12, 40],
+            });
         return Icon;
         }
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Point;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class MapController extends Controller
 {
@@ -19,18 +19,11 @@ class MapController extends Controller
             $url = "http://api.ipstack.com/{$ip}?access_key=" . env('IP_KEY');
             $json  = json_decode(file_get_contents($url), true);
         } catch (\exception $e) {
-            $json = [
-                'city' => $this->getRandomCity(),
-                'latitude' => rand(0,90),
-                'longitude' => rand(0,90),
-            ];
+            Log::error($e->getMessage());
+            $json = [];
         }
 
         return $json;
-    }
-
-    public function getRandomCity() {
-        return rand() * 20 .'sville';
     }
 
     /**
@@ -39,10 +32,12 @@ class MapController extends Controller
     public function hit() {
         $json = $this->lookUp();
 
+        $pointFake = Point::factory()->create();
+
         return Point::firstOrCreate([
-            'city' => isset($json['city']) ?: $this->getRandomCity(),
-            'latitude' => isset($json['latitude']) ?: rand(0,90),
-            'longitude' => isset($json['longitude']) ?: rand(0,90),
+            'city' => isset($json['city']) ?: $pointFake->city,
+            'latitude' => isset($json['latitude']) ?: $pointFake->latitude,
+            'longitude' => isset($json['longitude']) ?: $pointFake->longitude,
         ]);
     }
 
