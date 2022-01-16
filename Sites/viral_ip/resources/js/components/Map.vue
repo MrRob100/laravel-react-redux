@@ -67,6 +67,24 @@ export default {
     }
 }
 
+// function connectDots(data) {
+//     var features = data.features,
+//         feature,
+//         c = [],
+//         i;
+//
+//     for (i = 0; i < features.length; i += 1) {
+//         feature = features[i];
+//         // Make sure this feature is a point.
+//         if (feature.geometry === "Point") {
+//             c.push(feature.geometry.coordinates);
+//         }
+//     }
+//     return c;
+// }
+//
+// L.polyline(connectDots(data)).addTo(map);
+
 </script>
 
 
